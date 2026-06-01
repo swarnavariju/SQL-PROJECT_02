@@ -1,6 +1,6 @@
-Library Management System using SQL Project --P2
-Project Overview
-Project Title: Library Management System
+****Library Management System using SQL Project --P2****
+**Project Overview**
+**Project Title: Library Management System**
 Level: Intermediate
 Database: library_db
 
@@ -95,7 +95,7 @@ Table Creation: Created tables for branches, employees, members, books, issued s
     );
 ```
 
-2. CRUD Operations
+**2. CRUD Operations**
 Create: Inserted sample records into the books table.
 Read: Retrieved and displayed data from various tables.
 Update: Updated records in the employees table.
