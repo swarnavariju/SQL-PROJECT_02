@@ -1,8 +1,8 @@
 ****Library Management System using SQL Project --P2****
-**Project Overview**
-**Project Title: Library Management System**
-Level: Intermediate
-Database: library_db
+--**Project Overview**
+--**Project Title: Library Management System**
+--Level: Intermediate
+--Database: library_db
 
 This project demonstrates the implementation of a Library Management System using SQL. It includes creating and managing tables, performing CRUD operations, and executing advanced SQL queries. The goal is to showcase skills in database design, manipulation, and querying.
 
@@ -96,7 +96,104 @@ Table Creation: Created tables for branches, employees, members, books, issued s
 ```
 
 **2. CRUD Operations**
-Create: Inserted sample records into the books table.
-Read: Retrieved and displayed data from various tables.
-Update: Updated records in the employees table.
-Delete: Removed records from the members table as needed.
+--Create: Inserted sample records into the books table.
+--Read: Retrieved and displayed data from various tables.
+--Update: Updated records in the employees table.
+--Delete: Removed records from the members table as needed.
+
+Task 1. Create a New Book Record -- "978-1-60129-456-2', 'To Kill a Mockingbird', 'Classic', 6.00, 'yes', 'Harper Lee', 'J.B. Lippincott & Co.')"
+```sql
+    INSERT INTO BOOK(isbn,book_title,category,rental_price,status,author,publisher)
+    VALUES('978-1-60129-456-2', 'To Kill a Mockingbird', 'Classic', 6.00, 'yes', 'Harper Lee', 'J.B. Lippincott & Co.');
+```
+Task 2: Update an Existing Member's Address
+```sql
+      UPDATE MEMBERS 
+      SET member_address='125 Oak St'
+      where member_id = 'c103';
+```
+Task 3: Delete a Record from the Issued Status Table -- Objective: Delete the record with issued_id = 'IS121' from the issued_status table.
+```sql
+    DELETE FROM ISSUE_STATUS
+    WHERE ISSUED_ID='IS121';
+```
+Task 4: Retrieve All Books Issued by a Specific Employee -- Objective: Select all books issued by the employee with emp_id = 'E101'.
+```sql
+    SELECT * FROM ISSUE_STATUS
+    WHERE ISSUED_EMP_ID ='E101';
+```
+Task 5: List Members Who Have Issued More Than One Book -- Objective: Use GROUP BY to find members who have issued more than one book.
+```sql
+    SELECT ISSUED_EMP_ID,COUNT(*)
+    FROM ISSUE_STATUS
+    GROUP BY 1
+    HAVING COUNT(*)>1;
+```
+3. CTAS (Create Table As Select)
+Task 6: Create Summary Tables: Used CTAS to generate new tables based on query results - each book and total book_issued_cnt**
+```sql
+    CREATE TABLE BOOK_ISSUED_COUNT AS
+    SELECT b.isbn, b.book_title, COUNT(a.issued_id)
+    FROM ISSUE_STATUS AS a JOIN BOOK AS b
+    ON A.issued_book_isbn = b.isbn
+    GROUP BY b.isbn, b.book_title;
+```
+-- show table ---
+```sql
+    select * from BOOK_ISSUED_COUNT;
+```
+
+4. Data Analysis & Findings
+The following SQL queries were used to address specific questions:
+
+Task 7. Retrieve All Books in a Specific Category:
+```sql
+    SELECT * FROM BOOK
+    WHERE category='Classic';
+```
+Task 8: Find Total Rental Income by Category:
+```sql
+    SELECT 
+    	B.category,
+    	SUM(b.rental_price),
+    	COUNT(*)
+    FROM BOOK AS B
+    JOIN ISSUE_STATUS AS I
+    ON I.issued_bOok_isbn = b.isbn
+    GROUP BY 1;
+```
+List Members Who Registered in the Last 180 Days:
+```sql
+    SELECT * FROM MEMBERS 
+    WHERE reg_date >= CURRENT_DATE - INTERVAL '180 DAYS';
+```
+List Employees with Their Branch Manager's Name and their branch details:
+```sql
+   SELECT 
+  	E.emp_id,
+  	E.emp_name,
+  	E.position,
+  	E.salary,
+  	B.*,
+  	M.emp_name AS manager 
+  	FROM EMPLOYEES AS E
+  	JOIN BRANCH AS B
+  	on E.branch_id = B.branch_id
+  	JOIN EMPLOYEES AS M
+  	ON M.emp_id = B.manager_id;
+```
+Task 11. Create a Table of Books with Rental Price Above a Certain Threshold:
+```sql
+    CREATE TABLE EXPENCIIVE_BOOKS 
+    AS
+    SELECT * FROM BOOK
+    wHERE rental_price > 7.00;
+```
+Task 12: Retrieve the List of Books Not Yet Returned
+```sql
+    SELECT * FROM issued_status as ist
+    SELECT * FROM ISSUE_STATUS AS I
+    LEFT JOIN RETURN_STATUS AS R
+    ON I.issued_id = R.issued_id
+    WHERE R.return_id IS NULL;
+```
