@@ -95,3 +95,8 @@ Table Creation: Created tables for branches, employees, members, books, issued s
     );
 ```
 
+2. CRUD Operations
+Create: Inserted sample records into the books table.
+Read: Retrieved and displayed data from various tables.
+Update: Updated records in the employees table.
+Delete: Removed records from the members table as needed.
